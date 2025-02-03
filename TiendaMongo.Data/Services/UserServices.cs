@@ -22,7 +22,7 @@ namespace TiendaMongo.Data.Services
             _configuration = mongoConfig.Value ?? throw new ArgumentNullException(nameof(mongoConfig));
 
             var mongoDb = _client.GetDatabase(_configuration.DataBase);
-            _users = mongoDb.GetCollection<UserModel>(_configuration.Collection);
+            _users = mongoDb.GetCollection<UserModel>("usuarios");
         }
 
         public async Task<UserModel> CreateUser(UserModel user)
