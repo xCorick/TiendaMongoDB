@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TiendaMondo.Model;
 using Microsoft.Extensions.Options;
 using TiendaMongo.Data.Interfaces;
+using MongoDB.Bson;
 
 namespace TiendaMongo.Data.Services
 {
@@ -28,6 +29,20 @@ namespace TiendaMongo.Data.Services
         {
             await _users.InsertOneAsync(user);
             return user;
+        }
+
+        public async Task<List<UserModel>> FindAll() => await _users.Find(_ =>  true).ToListAsync();
+
+        public async Task<UserModel> FindByEmail(string email)
+        {
+            var filter = Builders<UserModel>.Filter.Eq(u => u.Correo,email);
+            return await _users.Find(filter).FirstAsync();
+        }
+
+        public async Task DeleteByEmail(string email)
+        {
+            var filter = Builders<UserModel>.Filter.Eq(u => u.Correo,email);
+            await _users.DeleteOneAsync(filter);
         }
     }
 }

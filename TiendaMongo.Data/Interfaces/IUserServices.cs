@@ -11,5 +11,11 @@ namespace TiendaMongo.Data.Interfaces
     public interface IUserServices
     {
         public Task<UserModel> CreateUser(UserModel userModel);
+
+        public Task<List<UserModel>> FindAll();
+
+        public Task<UserModel> FindByEmail(string email);
+
+        public Task DeleteByEmail(string email);
     }
 }

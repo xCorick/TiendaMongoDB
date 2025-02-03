@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net.WebSockets;
 using TiendaMondo.Model;
 using TiendaMongo.Data.Interfaces;
 using TiendaMongo.Data.Services;
@@ -22,16 +23,18 @@ namespace TiendaMongoDB.Controllers
 
         // GET: api/<UserController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> FindAll()
         {
-            return new string[] { "value1", "value2" };
+            var user = await _userServices.FindAll();
+            return Ok(user);
         }
 
         // GET api/<UserController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("Correo/{correo}")]
+        public async Task<IActionResult> FindByEmail(string correo)
         {
-            return "value";
+            var user = await _userServices.FindByEmail(correo);
+            return Ok(user);
         }
 
         // POST api/<UserController>
@@ -54,9 +57,16 @@ namespace TiendaMongoDB.Controllers
         }
 
         // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("Correo/{correo}")]
+        public async Task<IActionResult> DeleteByEmail(string correo)
         {
+            if(correo == null)
+                return BadRequest();
+            if (correo == string.Empty)
+                ModelState.AddModelError("correo", "El correo no debe ir vacio");
+
+            await _userServices.DeleteByEmail(correo);
+            return Ok();
         }
     }
 }
